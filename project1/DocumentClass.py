@@ -54,7 +54,9 @@ class Document:
     #create new dictionary of all words in training corpus and their counts
         unigram_mle = dict(self.token_counts)
     #divide each count by the total words in the corpus
-        unigram_mle.update((x,y/self.total_token_count) for x, y in unigram_mle)
+        tokens = unigram_mle.keys()
+        for token in tokens:
+            unigram_mle[token] = unigram_mle[token]/self.total_token_count
         return unigram_mle
     
     def generateBigramMLE(self):
@@ -78,8 +80,39 @@ class Document:
         #add one to the count of current word given (within the dictionary of the) previous word
             bigram_mle[token_parsed_doc[i-1]][token_parsed_doc[i]] += 1
         
+    #divide each sub-dictionary by its super dictionary's bigram count
+        for token in tokens:
+            bigram_count = bigram_mle[token]['bigram_count']
+            for token2 in tokens:
+                bigram_mle[token][token2] = bigram_mle[token][token2]/bigram_count
+            bigram_mle[token]['bigram_count'] = bigram_count
+        
         return bigram_mle
 
-
     def generateBigramSmoothed(self):
-        pass
+        bigram_smoothed = dict()
+        tokens = self.token_counts.keys()
+        for token in tokens:
+            if bigram_smoothed.get(token) == None:
+                bigram_smoothed[token] = {'bigram_count' : 0}
+            for token2 in tokens:
+                if bigram_smoothed[token].get(token2) == None:
+                    bigram_smoothed[token][token2] = 1
+                    bigram_smoothed[token]['bigram_count'] += 1
+    #go through document
+        token_parsed_doc = self.doc_text.split(' ')
+        for i in range(1, self.total_token_count):
+
+        #add one to the total number of bigrams that is conditioned on the previous word.
+            bigram_smoothed[token_parsed_doc[i-1]]['bigram_count'] += 1
+        #add one to the count of current word given (within the dictionary of the) previous word
+            bigram_smoothed[token_parsed_doc[i-1]][token_parsed_doc[i]] += 1
+        
+    #divide each sub-dictionary by its super dictionary's bigram count
+        for token in tokens:
+            bigram_count = bigram_smoothed[token]['bigram_count']
+            for token2 in tokens:
+                bigram_smoothed[token][token2] = bigram_smoothed[token][token2]/bigram_count
+            bigram_smoothed[token]['bigram_count'] = bigram_count
+        
+        return bigram_smoothed
