@@ -39,8 +39,19 @@ class Document:
             self.token_counts[token] += 1
     
     def unknownify(self):
-        unknowned_text = self.doc_text
-        for token in self.token_counts.keys():
+        unknowned_text = str(self.doc_text)
+        tokens = self.token_counts.keys()
+        for token in tokens:
             if self.token_counts[token] == 1:
-                unknowned_text.replace(' ' + token, '<unk>')
+                unknowned_text = unknowned_text.replace(' ' + token + ' ', ' <unk> ')
         return Document(unknowned_text)
+    
+    def generateUnigramMLE(self):
+        unigram_mle = self.token_counts
+        unigram_mle.update((x,y/self.total_token_count) for x, y in unigram_mle)
+    
+    def generateBigramMLE(self):
+        pass
+
+    def generateBigramSmoothed(self):
+        pass

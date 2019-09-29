@@ -6,6 +6,12 @@ learner_test = DocumentClass.Document(open('learner-test.txt', 'r').read())
 
 brown_train_unkowned = brown_train.unknownify()
 
+
+#unigram_mle = brown_train_unkowned.generateUnigramMLE()
+#bigram_mle = brown_train_unkowned.generateBigramMLE()
+#bigram_smooth = brown_train_unkowned.generateBigramSmoothed()
+
+
 ###POST-PROCESSING###
 
 #Question 1
@@ -29,6 +35,8 @@ brown_test_word_types = set(brown_test.token_counts.keys())
 learner_test_word_types = set(learner_test.token_counts.keys())
 brown_train_word_types = set(brown_train.token_counts.keys())
 
+
+
 brown_test_distinct_words = brown_test_word_types - brown_train_word_types
 learner_test_distinct_words = learner_test_word_types - brown_train_word_types
 
@@ -36,10 +44,6 @@ percent_brown = str(round(100*len(brown_test_distinct_words)/len(brown_test_word
 percent_learner = str(round(100*len(learner_test_distinct_words)/len(learner_test_word_types), 2))
 
 
-print('unique brown test words:', end='')
-print(list(brown_test_distinct_words))
-print('unique learner test words:', end='') 
-print(list(learner_test_distinct_words))
-
 print('percent of unique brown test words: ' + percent_brown )
 print('percent of unique learner test words: ' + percent_learner )
+
