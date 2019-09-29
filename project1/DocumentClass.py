@@ -1,10 +1,12 @@
 class Document:
-    total_token_count = 0
-    token_counts = dict()
 
     def __init__(self,text = ''):
         self.doc_text = text
+        self.total_token_count = 0
+        self.token_counts = {}
+
         self.cleanDoc()
+        self.countTokens()
 
 
     def cleanDoc(self, pad=True, lower=True):
@@ -25,7 +27,9 @@ class Document:
             #corpus cleaning
             self.doc_text = self.doc_text[1:]    
             self.doc_text = self.doc_text.replace('\n','')
-            self.countTokens()
+            if '  ' in self.doc_text:
+                self.doc_text  = self.doc_text.replace('  ', ' ')
+            
     
     def countTokens(self):
         token_parsed_doc = self.doc_text.split(' ')

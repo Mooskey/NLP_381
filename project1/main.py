@@ -36,7 +36,6 @@ learner_test_word_types = set(learner_test.token_counts.keys())
 brown_train_word_types = set(brown_train.token_counts.keys())
 
 
-
 brown_test_distinct_words = brown_test_word_types - brown_train_word_types
 learner_test_distinct_words = learner_test_word_types - brown_train_word_types
 
