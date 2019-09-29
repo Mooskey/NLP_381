@@ -42,14 +42,23 @@ class Document:
                 
             self.token_counts[token] += 1
     
-    def unknownify(self):
+    def trainUnknownify(self):
         unknowned_text = str(self.doc_text)
         tokens = self.token_counts.keys()
         for token in tokens:
             if self.token_counts[token] == 1:
                 unknowned_text = unknowned_text.replace(' ' + token + ' ', ' <unk> ')
         return Document(unknowned_text)
-    
+
+    def testUnknownify(self, doc):
+        unknowned_text = str(self.doc_text)
+        test_tokens = set(self.token_counts.keys())
+        train_tokens = set(doc.token_counts.keys())
+        test_exclusive_tokens = test_tokens - train_tokens
+        for token in test_exclusive_tokens:
+            unknowned_text = unknowned_text.replace(' ' + token + ' ', ' <unk> ')
+        return Document(unknowned_text)
+
     def generateUnigramMLE(self):
     #create new dictionary of all words in training corpus and their counts
         unigram_mle = dict(self.token_counts)

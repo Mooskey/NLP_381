@@ -4,12 +4,14 @@ brown_train = DocumentClass.Document(open('brown-train.txt', 'r').read())
 brown_test = DocumentClass.Document(open('brown-test.txt', 'r').read())
 learner_test = DocumentClass.Document(open('learner-test.txt', 'r').read())
 
-brown_train_unkowned = brown_train.unknownify()
+brown_train_unknowned = brown_train.trainUnknownify()
+brown_test_unknowned = brown_test.testUnknownify(brown_train_unknowned)
+learner_test_unknowned = learner_test.testUnknownify(brown_train_unknowned)
 
 
-unigram_mle = brown_train_unkowned.generateUnigramMLE()
-bigram_mle = brown_train_unkowned.generateBigramMLE()
-bigram_smooth = brown_train_unkowned.generateBigramSmoothed()
+unigram_mle = brown_train_unknowned.generateUnigramMLE()
+bigram_mle = brown_train_unknowned.generateBigramMLE()
+bigram_smooth = brown_train_unknowned.generateBigramSmoothed()
 
 
 ###POST-PROCESSING###
@@ -18,7 +20,7 @@ bigram_smooth = brown_train_unkowned.generateBigramSmoothed()
 
 print('How many word types (unique words) are there in the training corpus? Please include the padding symbols and the unknown token.')
 
-word_types = len(brown_train_unkowned.token_counts.keys())
+word_types = len(brown_train_unknowned.token_counts.keys())
 
 print(word_types)
 
@@ -26,7 +28,7 @@ print(word_types)
 
 print('\nHow many word tokens are there in the training corpus?')
 
-print(brown_train_unkowned.total_token_count)
+print(brown_train_unknowned.total_token_count)
 
 #Question 3
 print('\nWhat percentage of word tokens and word types in each of the test corpora did not occur in training?')
