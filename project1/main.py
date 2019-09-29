@@ -1,8 +1,8 @@
 import DocumentClass
 ###PRE-PROCESSING###
-brown_train = DocumentClass.Document(open('brown-train.txt', 'r').read())
-brown_test = DocumentClass.Document(open('brown-test.txt', 'r').read())
-learner_test = DocumentClass.Document(open('learner-test.txt', 'r').read())
+brown_train = DocumentClass.Document(open('texts/brown-train.txt', 'r').read())
+brown_test = DocumentClass.Document(open('texts/brown-test.txt', 'r').read())
+learner_test = DocumentClass.Document(open('texts/learner-test.txt', 'r').read())
 
 brown_train_unknowned = brown_train.trainUnknownify()
 brown_test_unknowned = brown_test.testUnknownify(brown_train_unknowned)
