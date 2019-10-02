@@ -7,6 +7,7 @@ class Document:
 
         self.cleanDoc()
         self.countTokens()
+        self.token_parsed_doc = self.doc_text.split(' ')
 
 
     def cleanDoc(self, pad=True, lower=True):
@@ -32,8 +33,7 @@ class Document:
             
     
     def countTokens(self):
-        token_parsed_doc = self.doc_text.split(' ')
-        for token in token_parsed_doc:
+        for token in self.token_parsed_doc:
                 
             self.total_token_count +=1
 
@@ -80,14 +80,13 @@ class Document:
                     bigram_mle[token][token2] = 0
 
     #go through document
-        token_parsed_doc = self.doc_text.split(' ')
         
         for i in range(1, self.total_token_count):
 
         #add one to the total number of bigrams that is conditioned on the previous word.
-            bigram_mle[token_parsed_doc[i-1]]['bigram_count'] += 1
+            bigram_mle[self.token_parsed_doc[i-1]]['bigram_count'] += 1
         #add one to the count of current word given (within the dictionary of the) previous word
-            bigram_mle[token_parsed_doc[i-1]][token_parsed_doc[i]] += 1
+            bigram_mle[self.token_parsed_doc[i-1]][self.token_parsed_doc[i]] += 1
         
     #divide each sub-dictionary by its super dictionary's bigram count
         for token in tokens:
@@ -109,13 +108,12 @@ class Document:
                     bigram_smoothed[token][token2] = 1
                     bigram_smoothed[token]['bigram_count'] += 1
     #go through document
-        token_parsed_doc = self.doc_text.split(' ')
         for i in range(1, self.total_token_count):
 
         #add one to the total number of bigrams that is conditioned on the previous word.
-            bigram_smoothed[token_parsed_doc[i-1]]['bigram_count'] += 1
+            bigram_smoothed[self.token_parsed_doc[i-1]]['bigram_count'] += 1
         #add one to the count of current word given (within the dictionary of the) previous word
-            bigram_smoothed[token_parsed_doc[i-1]][token_parsed_doc[i]] += 1
+            bigram_smoothed[self.token_parsed_doc[i-1]][self.token_parsed_doc[i]] += 1
         
     #divide each sub-dictionary by its super dictionary's bigram count
         for token in tokens:
@@ -126,21 +124,43 @@ class Document:
         
         return bigram_smoothed
 
-    def percentTypeDiff(self, doc, model):
-        if(model == 'unigram'):
-            self_word_types = set(self.token_counts.keys())
-            comp_word_types = set(doc.token_counts.keys())
+    def percentTypeDiff(self,  model_type, doc = None, model = None):
+        if(model_type not in ['unigram', 'bigram']):
+            raise ValueError('Model must be unigram or bigram')
+        if(doc == None and model ==None):
+            raise ValueError('Must provide a comparison set')
+        if((doc == None or model!=None) and model_type == 'unigram'):
+            raise ValueError('Unigram model requires document input')
+        elif( (model == None or doc != None) and model_type == 'bigram'):
+            raise ValueError('Bigram model requires model input')
+
+        if(model_type == 'unigram'):
+            self_types = set(self.token_counts.keys())
+            comp_types = set(doc.token_counts.keys())
             
-            distinct_types = self_word_types - comp_word_types
-            percent_distinct_types = round(100*len(distinct_types)/len(self_word_types), 2)
+            distinct_types = self_types - comp_types
 
-            return percent_distinct_types
+        elif(model_type == 'bigram'):          
+            distinct_types = set()
+            self_types = set()
+            for i in range(1, self.total_token_count):
+                prev_word = self.token_parsed_doc[i-1]
+                curr_word = self.token_parsed_doc[i]
+                self_types.add(prev_word + ' ' + curr_word)
 
-        elif(model == 'bigram'):
-            pass
+                if(model[prev_word][curr_word] == 0):
+                    distinct_types.add(prev_word + ' ' + curr_word)
 
-    def percentTokenDiff(self, doc, model):
-        if(model == 'unigram'):
+
+        percent_distinct_types = round(100*len(distinct_types)/len(self_types), 2)
+
+        return percent_distinct_types    
+                
+
+
+
+    def percentTokenDiff(self,  model_type, doc = None, model = None):
+        if(model_type == 'unigram'):
             comp_word_types = set(doc.token_count.keys())
             distinct_tokens = 0
             for token in self.doc_text:
@@ -151,5 +171,5 @@ class Document:
 
             return percent_distinct_tokens
 
-        elif(model == 'bigram'):
+        elif(model_type == 'bigram'):
             pass

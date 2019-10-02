@@ -33,11 +33,11 @@ print(brown_train_unknowned.total_token_count)
 #Question 3
 print('\nWhat percentage of word tokens and word types in each of the test corpora did not occur in training?')
 
-percent_brown_types = brown_test.percentTypeDiff(brown_train, 'unigram')
-percent_brown_tokens = brown_test.percentTokenDiff(brown_train, 'unigram')
+percent_brown_types = brown_test.percentTypeDiff('unigram', doc = brown_train)
+percent_brown_tokens = brown_test.percentTokenDiff('unigram', doc = brown_train)
 
-percent_learner_types = learner_test.percentTypeDiff(brown_train, 'unigram')
-percent_learner_tokens = learner_test.percentTokenDiff(brown_train, 'unigram')
+percent_learner_types = learner_test.percentTypeDiff('unigram', doc = brown_train)
+percent_learner_tokens = learner_test.percentTokenDiff('unigram', doc = brown_train)
 
 
 print('percent of unique brown test token types: ' + percent_brown_types )
@@ -48,6 +48,10 @@ print('percent of unique learner test token: ' + percent_learner_tokens )
 
 #Question 4
 
-print('\nWhat percentage of bigrams (bigram type and bigram tokens) in each of the test corpora did not occur in training (treat <unk>y as a token that has been observed).')
+print('\nWhat percentage of bigrams (bigram type and bigram tokens) in each of the test corpora did not occur in training (treat <unk> as a token that has been observed).')
 
-    
+percent_brown_types_bigram = brown_test_unknowned.percentTypeDiff('bigram', model = bigram_mle)
+percent_brown_tokens_bigram = brown_test_unknowned.percentTokenDiff('bigram', model = bigram_mle)
+
+percent_learner_types_bigram = learner_test_unknowned.percentTypeDiff('bigram', model = bigram_mle)
+percent_learner_tokens_bigram = learner_test_unknowned.percentTokenDiff('bigram', model = bigram_mle)
