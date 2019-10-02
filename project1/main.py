@@ -33,18 +33,21 @@ print(brown_train_unknowned.total_token_count)
 #Question 3
 print('\nWhat percentage of word tokens and word types in each of the test corpora did not occur in training?')
 
-brown_test_word_types = set(brown_test.token_counts.keys())
-learner_test_word_types = set(learner_test.token_counts.keys())
-brown_train_word_types = set(brown_train.token_counts.keys())
+percent_brown_types = brown_test.percentTypeDiff(brown_train, 'unigram')
+percent_brown_tokens = brown_test.percentTokenDiff(brown_train, 'unigram')
+
+percent_learner_types = learner_test.percentTypeDiff(brown_train, 'unigram')
+percent_learner_tokens = learner_test.percentTokenDiff(brown_train, 'unigram')
 
 
-brown_test_distinct_words = brown_test_word_types - brown_train_word_types
-learner_test_distinct_words = learner_test_word_types - brown_train_word_types
+print('percent of unique brown test token types: ' + percent_brown_types )
+print('percent of unique brown test token: ' + percent_brown_tokens )
 
-percent_brown = str(round(100*len(brown_test_distinct_words)/len(brown_test_word_types), 2))
-percent_learner = str(round(100*len(learner_test_distinct_words)/len(learner_test_word_types), 2))
+print('\npercent of unique learner test token types: ' + percent_learner_types )
+print('percent of unique learner test token: ' + percent_learner_tokens )
 
+#Question 4
 
-print('percent of unique brown test token types: ' + percent_brown )
-print('percent of unique learner test token types: ' + percent_learner )
+print('\nWhat percentage of bigrams (bigram type and bigram tokens) in each of the test corpora did not occur in training (treat <unk>y as a token that has been observed).')
 
+    

@@ -125,3 +125,31 @@ class Document:
             bigram_smoothed[token]['bigram_count'] = bigram_count
         
         return bigram_smoothed
+
+    def percentTypeDiff(self, doc, model):
+        if(model == 'unigram'):
+            self_word_types = set(self.token_counts.keys())
+            comp_word_types = set(doc.token_counts.keys())
+            
+            distinct_types = self_word_types - comp_word_types
+            percent_distinct_types = round(100*len(distinct_types)/len(self_word_types), 2)
+
+            return percent_distinct_types
+
+        elif(model == 'bigram'):
+            pass
+
+    def percentTokenDiff(self, doc, model):
+        if(model == 'unigram'):
+            comp_word_types = set(doc.token_count.keys())
+            distinct_tokens = 0
+            for token in self.doc_text:
+                if token not in comp_word_types:
+                    distinct_tokens +=1
+
+            percent_distinct_tokens = 100*distinct_tokens/self.total_token_count
+
+            return percent_distinct_tokens
+
+        elif(model == 'bigram'):
+            pass
