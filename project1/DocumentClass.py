@@ -6,8 +6,9 @@ class Document:
         self.token_counts = {}
 
         self.cleanDoc()
-        self.countTokens()
         self.token_parsed_doc = self.doc_text.split(' ')
+
+        self.countTokens()
 
 
     def cleanDoc(self, pad=True, lower=True):
@@ -160,16 +161,35 @@ class Document:
 
 
     def percentTokenDiff(self,  model_type, doc = None, model = None):
+        if(model_type not in ['unigram', 'bigram']):
+            raise ValueError('Model must be unigram or bigram')
+        if(doc == None and model ==None):
+            raise ValueError('Must provide a comparison set')
+        if((doc == None or model!=None) and model_type == 'unigram'):
+            raise ValueError('Unigram model requires document input')
+        elif( (model == None or doc != None) and model_type == 'bigram'):
+            raise ValueError('Bigram model requires model input')
+
+        distinct_tokens = 0
+
         if(model_type == 'unigram'):
-            comp_word_types = set(doc.token_count.keys())
-            distinct_tokens = 0
+            comp_word_types = set(doc.token_counts.keys())
             for token in self.doc_text:
                 if token not in comp_word_types:
                     distinct_tokens +=1
 
             percent_distinct_tokens = 100*distinct_tokens/self.total_token_count
 
-            return percent_distinct_tokens
-
         elif(model_type == 'bigram'):
-            pass
+            for i in range(1, self.total_token_count):
+
+                prev_word = self.token_parsed_doc[i-1]
+                curr_word = self.token_parsed_doc[i]
+
+                if(model[prev_word][curr_word] == 0):
+                    distinct_tokens +=1
+
+            percent_distinct_tokens = 100*distinct_tokens/self.total_token_count - 1
+        
+        return percent_distinct_tokens
+

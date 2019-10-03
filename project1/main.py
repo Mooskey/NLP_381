@@ -41,10 +41,10 @@ percent_learner_tokens = learner_test.percentTokenDiff('unigram', doc = brown_tr
 
 
 print('percent of unique brown test token types: ' + percent_brown_types )
-print('percent of unique brown test token: ' + percent_brown_tokens )
+print('percent of unique brown test tokens: ' + percent_brown_tokens )
 
 print('\npercent of unique learner test token types: ' + percent_learner_types )
-print('percent of unique learner test token: ' + percent_learner_tokens )
+print('percent of unique learner test tokens: ' + percent_learner_tokens )
 
 #Question 4
 
@@ -55,3 +55,9 @@ percent_brown_tokens_bigram = brown_test_unknowned.percentTokenDiff('bigram', mo
 
 percent_learner_types_bigram = learner_test_unknowned.percentTypeDiff('bigram', model = bigram_mle)
 percent_learner_tokens_bigram = learner_test_unknowned.percentTokenDiff('bigram', model = bigram_mle)
+
+print('percent of unique brown test bigram token types: ' + percent_brown_types_bigram )
+print('percent of unique brown test bigram tokens: ' + percent_brown_tokens_bigram )
+
+print('\npercent of unique learner test bigram token types: ' + percent_learner_types_bigram )
+print('percent of unique learner test bigram tokens: ' + percent_learner_tokens_bigram )
