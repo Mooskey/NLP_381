@@ -194,4 +194,4 @@ class Document:
             percent_distinct_tokens = 100*distinct_tokens/self.total_token_count - 1
         
         return percent_distinct_tokens
-
+    

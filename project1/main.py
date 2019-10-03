@@ -1,4 +1,4 @@
-import DocumentClass
+import DocumentClass, Extrapolation
 ###PRE-PROCESSING###
 brown_train = DocumentClass.Document(open('texts/brown-train.txt', 'r').read())
 brown_test = DocumentClass.Document(open('texts/brown-test.txt', 'r').read())
