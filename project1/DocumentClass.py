@@ -44,20 +44,22 @@ class Document:
             self.token_counts[token] += 1
     
     def trainUnknownify(self):
-        unknowned_text = str(self.doc_text)
-        tokens = self.token_counts.keys()
-        for token in tokens:
+        unknowned_text = str()
+        for token in self.token_parsed_doc:
             if self.token_counts[token] == 1:
-                unknowned_text = unknowned_text.replace(' ' + token + ' ', ' <unk> ')
+                token = '<unk>'
+            unknowned_text += ' ' + token + ' '
         return Document(unknowned_text)
 
     def testUnknownify(self, doc):
-        unknowned_text = str(self.doc_text)
+        unknowned_text = str()
         test_tokens = set(self.token_counts.keys())
         train_tokens = set(doc.token_counts.keys())
         test_exclusive_tokens = test_tokens - train_tokens
-        for token in test_exclusive_tokens:
-            unknowned_text = unknowned_text.replace(' ' + token + ' ', ' <unk> ')
+        for token in self.token_parsed_doc:
+            if token in test_exclusive_tokens:
+                token = '<unk>'
+            unknowned_text += ' ' + token + ' '
         return Document(unknowned_text)
 
     def generateUnigramMLE(self):
@@ -149,7 +151,7 @@ class Document:
                 curr_word = self.token_parsed_doc[i]
                 self_types.add(prev_word + ' ' + curr_word)
 
-                if(model[prev_word][curr_word] == 0):
+                if(model[prev_word].get(curr_word) in [0, None]):
                     distinct_types.add(prev_word + ' ' + curr_word)
 
 
@@ -186,7 +188,7 @@ class Document:
                 prev_word = self.token_parsed_doc[i-1]
                 curr_word = self.token_parsed_doc[i]
 
-                if(model[prev_word][curr_word] == 0):
+                if(model[prev_word].get(curr_word) in [0, None]):
                     distinct_tokens +=1
 
             percent_distinct_tokens = 100*distinct_tokens/self.total_token_count - 1
