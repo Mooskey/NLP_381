@@ -203,3 +203,35 @@ for i in range(0,3):
     l = sum(bigram_smooth_log_prob[i])/length_sentence[i]
     bigram_smooth_perplexity.append(2**l)
     print('Sentence ' + str(i+1) + ' Perplexity: ' + str(bigram_smooth_perplexity[i]))
+
+#Question 7
+
+print('\n Compute the perplelxities of the entire test corpora, sparately for the brown-test.text and learner-test.txt under each of the models. Discuss the differences in the results you obtained.')
+
+brown_unigram_log_prob = Extrapolation.logProbabilities(brown_test_unknowned.token_parsed_doc, unigram_mle, 'unigram')
+brown_bigram_mle_log_prob = Extrapolation.logProbabilities(brown_test_unknowned.token_parsed_doc, bigram_mle, 'bigram')
+brown_bigram_smooth_log_prob = Extrapolation.logProbabilities(brown_test_unknowned.token_parsed_doc, bigram_smooth, 'bigram')
+
+
+brown_1_perplexity = 2**(sum(brown_unigram_log_prob)/brown_test_unknowned.total_token_count)
+brown_2mle_perplexity = 2**(sum(brown_bigram_mle_log_prob)/brown_test_unknowned.total_token_count)
+brown_2smooth_perplexity = 2**(sum(brown_bigram_smooth_log_prob)/brown_test_unknowned.total_token_count)
+
+
+learner_unigram_log_prob = Extrapolation.logProbabilities(learner_test_unknowned.token_parsed_doc, unigram_mle, 'unigram')
+learner_bigram_mle_log_prob = Extrapolation.logProbabilities(learner_test_unknowned.token_parsed_doc, bigram_mle, 'bigram')
+learner_bigram_smooth_log_prob = Extrapolation.logProbabilities(learner_test_unknowned.token_parsed_doc, bigram_smooth, 'bigram')
+
+learner_1_perplexity = 2**(sum(learner_unigram_log_prob)/brown_test_unknowned.total_token_count)
+learner_2mle_perplexity = 2**(sum(learner_bigram_mle_log_prob)/brown_test_unknowned.total_token_count)
+learner_2smooth_perplexity = 2**(sum(learner_bigram_smooth_log_prob)/brown_test_unknowned.total_token_count)
+
+print('brown-test.txt perplexities\n_______________')
+print('Unigram: ' + str(brown_1_perplexity))
+print('Bigram MLE: ' + str(brown_2mle_perplexity))
+print('Bigram Smooth: ' + str(brown_2smooth_perplexity))
+
+print('\nlearner-test.txt perplexities\n_______________')
+print('Unigram: ' + str(learner_1_perplexity))
+print('Bigram MLE: ' + str(learner_2mle_perplexity))
+print('Bigram Smooth: ' + str(learner_2smooth_perplexity))
