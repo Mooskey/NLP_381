@@ -1,17 +1,17 @@
 class Document:
 
-    def __init__(self,text = ''):
+    def __init__(self, text = '', pad = True, lower = True):
         self.doc_text = text
         self.total_token_count = 0
         self.token_counts = {}
 
-        self.cleanDoc()
+        self.cleanDoc(pad, lower)
         self.token_parsed_doc = self.doc_text.split(' ')
 
         self.countTokens()
 
 
-    def cleanDoc(self, pad=True, lower=True):
+    def cleanDoc(self, pad, lower):
         if(pad == False and lower == False):
             print('Nothing to do.')
         else: 
@@ -20,18 +20,18 @@ class Document:
 
             self.doc_text = ''
             #if this is not an already cleaned document:
-            if '<s>' not in self.doc_text:
-                for i in range(0, len(sentence_parsed_doc)):
-                #pad and lowercase each sentence
-                    sentence_parsed_doc[i] = ' <s> ' + sentence_parsed_doc[i].lower() + ' </s> .'
-                #reinstitute it into corpus
-                    self.doc_text = self.doc_text + sentence_parsed_doc[i]
-    
-            #corpus cleaning
-                self.doc_text = self.doc_text[1:]    
-                self.doc_text = self.doc_text.replace('\n','')
-                if '  ' in self.doc_text:
-                    self.doc_text  = self.doc_text.replace('  ', ' ')
+
+            for i in range(0, len(sentence_parsed_doc)):
+            #pad and lowercase each sentence
+                sentence_parsed_doc[i] = ' <s> ' + sentence_parsed_doc[i].lower() + ' </s> .'
+            #reinstitute it into corpus
+                self.doc_text = self.doc_text + sentence_parsed_doc[i]
+
+        #corpus cleaning
+            self.doc_text = self.doc_text[1:]    
+            self.doc_text = self.doc_text.replace('\n','')
+            if '  ' in self.doc_text:
+                self.doc_text  = self.doc_text.replace('  ', ' ')
 
     
     def countTokens(self):
@@ -50,18 +50,18 @@ class Document:
             if self.token_counts[token] == 1:
                 token = '<unk>'
             unknowned_text += ' ' + token + ' '
-        return Document(unknowned_text)
+        return Document(unknowned_text, False, False)
 
     def testUnknownify(self, doc):
-        unknowned_text = str()
+        unknowned_text = str(self.doc_text)
         test_tokens = set(self.token_counts.keys())
         train_tokens = set(doc.token_counts.keys())
         test_exclusive_tokens = test_tokens - train_tokens
-        for token in self.token_parsed_doc:
-            if token in test_exclusive_tokens:
-                token = '<unk>'
-            unknowned_text += ' ' + token + ' '
-        return Document(unknowned_text)
+        for token in test_exclusive_tokens:
+            unknowned_text = unknowned_text.replace(' ' + token + ' ', ' <unk> ')
+        #in case the same word appears twice. I should do this with a regex but I need to brush up on those.
+            unknowned_text = unknowned_text.replace(' ' + token + ' ', ' <unk> ')
+        return Document(unknowned_text,False,False)
 
     def generateUnigramMLE(self):
     #create new dictionary of all words in training corpus and their counts

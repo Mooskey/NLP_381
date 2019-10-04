@@ -95,15 +95,6 @@ for i in range(0, 3):
 
 print('Bigram MLE Model')
 
-
-print('Which of the parameters have zero values under each model? Use log base 2 in your calculations. Map words not observed in the training corpus to the <unk> token.')
-
-
-
-print('Zero Probabilities: ', end = '') 
-for word in unigram_zeroes:
-    print(word, sep=', ', end='')
-
 #caclulate bigram mle log probability
 
 bigram_mle_log_prob = [Extrapolation.logProbabilities(sentence, bigram_mle, 'bigram') for sentence in sentences]
@@ -128,5 +119,58 @@ for i in range(0,3):
 
     print('Log probability of sentence ' + str(i+1) + ' = ' + str(sum(bigram_mle_log_prob[i])))
     print('\n')
+
+
+    print('Bigram Smooth Model')
+
+#caclulate bigram mle log probability
+
+bigram_smooth_log_prob = [Extrapolation.logProbabilities(sentence, bigram_smooth, 'bigram') for sentence in sentences]
+
+
+bigram_smooth_zeroes = list()
+
+for i in range(0,3):
+    print('Sentence ' + str(i + 1))
+    for j in range(1, length_sentence[i]):
+        prev_word = sentences[i][j-1]
+        curr_word = sentences[i][j]
+
+    #if the conditional log probability is 0, add the associated bigram to the list of log probabilities that are zero
+        if bigram_smooth_log_prob[i][j-1] == 0:
+            bigram_smooth_zeroes.append(sentences[i][j-1] + ' ' + sentences[i][j])
+
+    #print each parameter and its conditional log probability
+
+        print('log2(P(' + curr_word + ' | ' + prev_word + ')) = ' + str(bigram_smooth_log_prob[i][j-1]))
+
+
+    print('Log probability of sentence ' + str(i+1) + ' = ' + str(sum(bigram_smooth_log_prob[i])))
+    print('\n')
                 
-            
+
+print('Which of the parameters have zero values under each model? Use log base 2 in your calculations. Map words not observed in the training corpus to the <unk> token.')
+
+
+
+print('Zero Probabilities: ', end = '') 
+if unigram_zeroes == []:
+    print('Empty')
+else:
+    for word in unigram_zeroes:
+        print(word, sep=', ', end='')
+
+
+print('Bigram MLE Zero Probabilities: ', end = '')
+if bigram_mle_zeroes == []:
+    print('Empty')
+else:
+    for word in bigram_mle_zeroes:
+        print(word, sep=', ', end='')
+
+print('Bigram Smooth Zero Probabilities: ', end = '')
+if bigram_smooth_zeroes == []:
+    print('Empty')
+else:
+    for word in bigram_smooth_zeroes:
+        print(word, sep=', ', end='')

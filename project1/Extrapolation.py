@@ -19,9 +19,10 @@ def logProbabilities(sentence, model, ngram):
             prev_word = sentence[i-1]
             curr_word = sentence[i]
             
-            cond_prob = model[prev_word][curr_word]
-
-            logs.append(math.log2(model[prev_word][curr_word]))
+            if model[prev_word][curr_word] == 0.0:
+                logs.append(float('-inf'))
+            else:
+                logs.append(math.log2(model[prev_word][curr_word]))
 
     return logs
 
