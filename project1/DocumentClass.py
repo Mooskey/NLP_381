@@ -19,19 +19,20 @@ class Document:
             sentence_parsed_doc = self.doc_text.split(' .')
 
             self.doc_text = ''
+            #if this is not an already cleaned document:
+            if '<s>' not in self.doc_text:
+                for i in range(0, len(sentence_parsed_doc)):
+                #pad and lowercase each sentence
+                    sentence_parsed_doc[i] = ' <s> ' + sentence_parsed_doc[i].lower() + ' </s> .'
+                #reinstitute it into corpus
+                    self.doc_text = self.doc_text + sentence_parsed_doc[i]
+    
+            #corpus cleaning
+                self.doc_text = self.doc_text[1:]    
+                self.doc_text = self.doc_text.replace('\n','')
+                if '  ' in self.doc_text:
+                    self.doc_text  = self.doc_text.replace('  ', ' ')
 
-            for i in range(0, len(sentence_parsed_doc)):
-            #pad and lowercase each sentence
-                sentence_parsed_doc[i] = ' <s> ' + sentence_parsed_doc[i].lower() + ' </s> .'
-            #reinstitute it into corpus
-                self.doc_text = self.doc_text + sentence_parsed_doc[i]
-
-        #corpus cleaning
-            self.doc_text = self.doc_text[1:]    
-            self.doc_text = self.doc_text.replace('\n','')
-            if '  ' in self.doc_text:
-                self.doc_text  = self.doc_text.replace('  ', ' ')
-            
     
     def countTokens(self):
         for token in self.token_parsed_doc:
@@ -91,13 +92,14 @@ class Document:
         #add one to the count of current word given (within the dictionary of the) previous word
             bigram_mle[self.token_parsed_doc[i-1]][self.token_parsed_doc[i]] += 1
         
-    #divide each sub-dictionary by its super dictionary's bigram count
+    #divide each sub-dictionary by its super dictionary's bigram count to get conditional probabilities
         for token in tokens:
             bigram_count = bigram_mle[token]['bigram_count']
             for token2 in tokens:
                 bigram_mle[token][token2] = bigram_mle[token][token2]/bigram_count
             bigram_mle[token]['bigram_count'] = bigram_count
-        
+
+    #return nested dictionary of conditional probabilities    
         return bigram_mle
 
     def generateBigramSmoothed(self):

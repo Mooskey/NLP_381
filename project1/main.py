@@ -42,7 +42,7 @@ percent_learner_tokens = str(learner_test.percentTokenDiff('unigram', doc = brow
 
 print('percent of unique brown test token types: ' + percent_brown_types )
 print('percent of unique brown test tokens: ' + percent_brown_tokens )
-
+#TODO fix percentages
 print('\npercent of unique learner test token types: ' + percent_learner_types )
 print('percent of unique learner test tokens: ' + percent_learner_tokens )
 
@@ -61,3 +61,72 @@ print('percent of unique brown test bigram tokens: ' + percent_brown_tokens_bigr
 
 print('\npercent of unique learner test bigram token types: ' + percent_learner_types_bigram )
 print('percent of unique learner test bigram tokens: ' + percent_learner_tokens_bigram )
+
+#Question 5
+
+print('\nCompute the log probabilities of the following sentences under the three models. Please list all of the parameters required to compute the probabilities and show the complete calculation.')
+
+#list of sentences
+sentences = [
+        '<s> he was laughed off the screen </s> .'.split(' '), 
+        '<s> there was no compulsion behind them </s> .'.split(' '), 
+        '<s> i look forward to hearing your reply </s> .'.split(' ')
+        ]
+
+print('Unigram MLE Model')
+#calculate unigram log probability
+unigram_log_prob = [Extrapolation.logProbabilities(sentence, unigram_mle, 'unigram') for sentence in sentences]
+
+#length of sentences
+length_sentence = [len(sentence) for sentence in sentences]
+unigram_zeroes = list()
+
+print('\nLog probabilities of each unigram token:')
+for i in range(0, 3):
+    print('Sentence ' + str(i + 1))
+    for j in range(0, length_sentence[i]):
+        #if the log probability is 0, add the associated word to the list of log probabilities that are zero
+        if unigram_log_prob[i][j] == 0:
+            unigram_zeroes.append(sentences[i][j])
+        print('log2(P(' + sentences[i][j] + ')) = ' + str(unigram_log_prob[i][j]))
+        
+    print('Log probability of sentence ' + str(i+1) + ' = ' + str(sum(unigram_log_prob[i])))
+    print('\n')
+
+print('Bigram MLE Model')
+
+
+print('Which of the parameters have zero values under each model? Use log base 2 in your calculations. Map words not observed in the training corpus to the <unk> token.')
+
+
+
+print('Zero Probabilities: ', end = '') 
+for word in unigram_zeroes:
+    print(word, sep=', ', end='')
+
+#caclulate bigram mle log probability
+
+bigram_mle_log_prob = [Extrapolation.logProbabilities(sentence, bigram_mle, 'bigram') for sentence in sentences]
+
+
+bigram_mle_zeroes = list()
+
+for i in range(0,3):
+    print('Sentence ' + str(i + 1))
+    for j in range(1, length_sentence[i]):
+        prev_word = sentences[i][j-1]
+        curr_word = sentences[i][j]
+
+    #if the conditional log probability is 0, add the associated bigram to the list of log probabilities that are zero
+        if bigram_mle_log_prob[i][j-1] == 0:
+            bigram_mle_zeroes.append(sentences[i][j-1] + ' ' + sentences[i][j])
+
+    #print each parameter and its conditional log probability
+
+        print('log2(P(' + curr_word + ' | ' + prev_word + ')) = ' + str(bigram_mle_log_prob[i][j-1]))
+
+
+    print('Log probability of sentence ' + str(i+1) + ' = ' + str(sum(bigram_mle_log_prob[i])))
+    print('\n')
+                
+            

@@ -1,18 +1,27 @@
 import math
 
-def logProbability(self, sentence, model, ngram):
+def logProbabilities(sentence, model, ngram):
     logs = list()
+    model_tokens = set(model.keys())
+    
+#map all unseen tokens to <unk>
+    for i in range(0, len(sentence)):
+        if sentence[i] not in model_tokens:
+            sentence[i] = '<unk>'
+
+
     if ngram == 'unigram':
-        sentence = sentence.split(' ')
         for token in sentence:
-            #if the token is not in our model, then the token maps to <unk>
-            if model.get(token) == None:
-                token = '<unk>'
-            #append the log of the probability of token to the list of tokens
             logs.append(math.log2(model[token]))
 
     if ngram == 'bigram':
-        pass
+        for i in range(1, len(sentence)):
+            prev_word = sentence[i-1]
+            curr_word = sentence[i]
+            
+            cond_prob = model[prev_word][curr_word]
 
-    return sum(logs)
+            logs.append(math.log2(model[prev_word][curr_word]))
+
+    return logs
 
