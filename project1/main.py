@@ -121,9 +121,9 @@ for i in range(0,3):
     print('\n')
 
 
-    print('Bigram Smooth Model')
+print('Bigram Smooth Model')
 
-#caclulate bigram mle log probability
+#caclulate bigram smooth log probability
 
 bigram_smooth_log_prob = [Extrapolation.logProbabilities(sentence, bigram_smooth, 'bigram') for sentence in sentences]
 
@@ -174,3 +174,32 @@ if bigram_smooth_zeroes == []:
 else:
     for word in bigram_smooth_zeroes:
         print(word, sep=', ', end='')
+
+
+#Question 6
+
+print('\nCompute the perplexities of each of the sentences above under each of the models.')
+
+print('Unigram Perplexity')
+unigram_perplexity = list()
+
+for i in range(0,3):
+    l = sum(unigram_log_prob[i])/length_sentence[i]
+    unigram_perplexity.append(2**l)
+    print('Sentence ' + str(i+1) + ' Perplexity: ' + str(perplexity[i]))
+
+print('Bigram MLE Perplexity')
+bigram_mle_perplexity = list()
+
+for i in range(0,3):
+    l = sum(bigram_mle_log_prob[i])/length_sentence[i]
+    bigram_mle_perplexity.append(2**l)
+    print('Sentence ' + str(i+1) + ' Perplexity: ' + str(bigram_mle_perplexity[i]))
+
+print('Bigram Smooth Perplexity')
+bigram_smooth_perplexity = list()
+
+for i in range(0,3):
+    l = sum(bigram_smooth_log_prob[i])/length_sentence[i]
+    bigram_smooth_perplexity.append(2**l)
+    print('Sentence ' + str(i+1) + ' Perplexity: ' + str(bigram_smooth_perplexity[i]))

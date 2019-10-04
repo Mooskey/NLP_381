@@ -13,25 +13,23 @@ class Document:
 
     def cleanDoc(self, pad, lower):
         if(pad == False and lower == False):
-            print('Nothing to do.')
         else: 
         #parse by sentence
-            sentence_parsed_doc = self.doc_text.split(' .')
+            sentence_parsed_doc = self.doc_text.splitlines()
 
             self.doc_text = ''
             #if this is not an already cleaned document:
 
             for i in range(0, len(sentence_parsed_doc)):
             #pad and lowercase each sentence
-                sentence_parsed_doc[i] = ' <s> ' + sentence_parsed_doc[i].lower() + ' </s> .'
+                sentence_parsed_doc[i] = ' <s> ' + sentence_parsed_doc[i].lower() + ' </s>'
             #reinstitute it into corpus
                 self.doc_text = self.doc_text + sentence_parsed_doc[i]
 
         #corpus cleaning
             self.doc_text = self.doc_text[1:]    
-            self.doc_text = self.doc_text.replace('\n','')
-            if '  ' in self.doc_text:
-                self.doc_text  = self.doc_text.replace('  ', ' ')
+        if '  ' in self.doc_text:
+            self.doc_text  = self.doc_text.replace('  ', ' ')
 
     
     def countTokens(self):
