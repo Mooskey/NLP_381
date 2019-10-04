@@ -1,3 +1,5 @@
+import re
+
 class Document:
 
     def __init__(self, text = '', pad = True, lower = True):
@@ -15,22 +17,25 @@ class Document:
         if(pad == False and lower == False):
             pass
         else: 
-        #parse by sentence
-            sentence_parsed_doc = self.doc_text.splitlines()
+        #parse sentence with endings . , ? ? , and ! !
+            regex_parse = '( \.\n)|( ! !\n)|( \? \?\n)'
+            sentence_parsed_doc = re.split(regex_parse, self.doc_text)
+            
+        #remove line breaks
+            sentence_parsed_doc = [y.replace('\n', ' ') for y in sentence_parsed_doc if y != None]
+            
+        #remove trailing garbage
+            del(sentence_parsed_doc[-1])
+            sentence_parsed_doc[-1] = sentence_parsed_doc[-1][:-1]
 
+        #attach padding to each of the sentences
+            for i in range(0,len(sentence_parsed_doc),2):
+                sentence_parsed_doc[i] = '<s> ' + sentence_parsed_doc[i] + ' </s>'
+        #piece corpus back together
+            
             self.doc_text = ''
-            #if this is not an already cleaned document:
-
-            for i in range(0, len(sentence_parsed_doc)):
-            #pad and lowercase each sentence
-                sentence_parsed_doc[i] = ' <s> ' + sentence_parsed_doc[i].lower() + ' </s>'
-            #reinstitute it into corpus
-                self.doc_text = self.doc_text + sentence_parsed_doc[i]
-
-        #corpus cleaning
-            self.doc_text = self.doc_text[1:]    
-        if '  ' in self.doc_text:
-            self.doc_text  = self.doc_text.replace('  ', ' ')
+            for sentence in sentence_parsed_doc:
+                self.doc_text += sentence
 
     
     def countTokens(self):
@@ -176,10 +181,14 @@ class Document:
         distinct_tokens = 0
 
         if(model_type == 'unigram'):
+        #find the tokens that only appear in the document this is called on
+            word_types = set(self.token_counts.keys())
             comp_word_types = set(doc.token_counts.keys())
-            for token in self.doc_text:
-                if token not in comp_word_types:
-                    distinct_tokens +=1
+            diff = word_types - comp_word_types
+
+        #sum the count of each of those tokens
+            for token in diff:
+                distinct_tokens += self.token_counts[token]
 
             percent_distinct_tokens = 100*distinct_tokens/self.total_token_count
 
