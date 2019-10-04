@@ -79,23 +79,19 @@ class Document:
     def generateBigramMLE(self):
     #Create a nested dictionary of all token bigrams and a size
         bigram_mle = dict()
-        tokens = self.token_counts.keys()
-        for token in tokens:
-            if bigram_mle.get(token) == None:
-                bigram_mle[token] = {'bigram_count' : 0}
-            for token2 in tokens:
-                if bigram_mle[token].get(token2) == None:
-                    bigram_mle[token][token2] = 0
+        tokens = set(self.token_counts.keys())
+        for x in tokens:
+            bigram_mle[x] = {'bigram_count' : 0}
+            for y in tokens:
+                bigram_mle[x][y] = 0
 
     #go through document
-        
-        for i in range(1, self.total_token_count):
+        for i in range(1, len(self.token_parsed_doc)):
+            prev = self.token_parsed_doc[i-1]
+            curr = self.token_parsed_doc[i]
+            bigram_mle[prev][curr] += 1
+            bigram_mle[prev]['bigram_count'] += 1
 
-        #add one to the total number of bigrams that is conditioned on the previous word.
-            bigram_mle[self.token_parsed_doc[i-1]]['bigram_count'] += 1
-        #add one to the count of current word given (within the dictionary of the) previous word
-            bigram_mle[self.token_parsed_doc[i-1]][self.token_parsed_doc[i]] += 1
-        
     #divide each sub-dictionary by its super dictionary's bigram count to get conditional probabilities
         for token in tokens:
             bigram_count = bigram_mle[token]['bigram_count']
@@ -140,7 +136,7 @@ class Document:
             raise ValueError('Must provide a comparison set')
         if((doc == None or model!=None) and model_type == 'unigram'):
             raise ValueError('Unigram model requires document input')
-        elif( (model == None or doc != None) and model_type == 'bigram'):
+        elif((model == None or doc != None) and model_type == 'bigram'):
             raise ValueError('Bigram model requires model input')
 
         if(model_type == 'unigram'):
@@ -157,10 +153,10 @@ class Document:
                 curr_word = self.token_parsed_doc[i]
                 self_types.add(prev_word + ' ' + curr_word)
 
-                if(model[prev_word].get(curr_word) in [0, None]):
+                if(model[prev_word][curr_word] == 0):
                     distinct_types.add(prev_word + ' ' + curr_word)
 
-
+        print(len(distinct_types))
         percent_distinct_types = round(100*len(distinct_types)/len(self_types), 2)
 
         return percent_distinct_types    

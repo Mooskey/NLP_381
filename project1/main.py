@@ -8,9 +8,9 @@ brown_train_unknowned = brown_train.trainUnknownify()
 brown_test_unknowned = brown_test.testUnknownify(brown_train_unknowned)
 learner_test_unknowned = learner_test.testUnknownify(brown_train_unknowned)
 
+bigram_mle = brown_train_unknowned.generateBigramMLE()
 
 unigram_mle = brown_train_unknowned.generateUnigramMLE()
-bigram_mle = brown_train_unknowned.generateBigramMLE()
 bigram_smooth = brown_train_unknowned.generateBigramSmoothed()
 
 
@@ -42,7 +42,7 @@ percent_learner_tokens = str(learner_test.percentTokenDiff('unigram', doc = brow
 
 print('percent of unique brown test token types: ' + percent_brown_types )
 print('percent of unique brown test tokens: ' + percent_brown_tokens )
-#TODO fix percentages
+
 print('\npercent of unique learner test token types: ' + percent_learner_types )
 print('percent of unique learner test tokens: ' + percent_learner_tokens )
 
