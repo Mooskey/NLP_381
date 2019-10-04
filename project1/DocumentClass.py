@@ -13,6 +13,7 @@ class Document:
 
     def cleanDoc(self, pad, lower):
         if(pad == False and lower == False):
+            pass
         else: 
         #parse by sentence
             sentence_parsed_doc = self.doc_text.splitlines()
