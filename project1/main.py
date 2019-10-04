@@ -14,11 +14,11 @@ bigram_mle = brown_train_unknowned.generateBigramMLE()
 bigram_smooth = brown_train_unknowned.generateBigramSmoothed()
 
 
-###POST-PROCESSING###
+###QUESTIONS###
 
 #Question 1
 
-print('How many word types (unique words) are there in the training corpus? Please include the padding symbols and the unknown token.')
+print('Q1\n   How many word types (unique words) are there in the training corpus? Please include the padding symbols and the unknown token.\n')
 
 word_types = len(brown_train_unknowned.token_counts.keys())
 
@@ -26,12 +26,12 @@ print(word_types)
 
 #Question 2
 
-print('\nHow many word tokens are there in the training corpus?')
+print('Q2\n   How many word tokens are there in the training corpus?\n')
 
 print(brown_train_unknowned.total_token_count)
 
 #Question 3
-print('\nWhat percentage of word tokens and word types in each of the test corpora did not occur in training?')
+print('Q3\n   What percentage of word tokens and word types in each of the test corpora did not occur in training?')
 
 percent_brown_types = str(brown_test.percentTypeDiff('unigram', doc = brown_train))
 percent_brown_tokens = str(brown_test.percentTokenDiff('unigram', doc = brown_train))
@@ -48,7 +48,7 @@ print('percent of unique learner test tokens: ' + percent_learner_tokens )
 
 #Question 4
 
-print('\nWhat percentage of bigrams (bigram type and bigram tokens) in each of the test corpora did not occur in training (treat <unk> as a token that has been observed).')
+print('Q4\n   What percentage of bigrams (bigram type and bigram tokens) in each of the test corpora did not occur in training (treat <unk> as a token that has been observed).')
 
 percent_brown_types_bigram = str(brown_test_unknowned.percentTypeDiff('bigram', model = bigram_mle))
 percent_brown_tokens_bigram = str(brown_test_unknowned.percentTokenDiff('bigram', model = bigram_mle))
@@ -64,7 +64,7 @@ print('percent of unique learner test bigram tokens: ' + percent_learner_tokens_
 
 #Question 5
 
-print('\nCompute the log probabilities of the following sentences under the three models. Please list all of the parameters required to compute the probabilities and show the complete calculation.')
+print('Q5a\n   Compute the log probabilities of the following sentences under the three models. Please list all of the parameters required to compute the probabilities and show the complete calculation.')
 
 #list of sentences
 sentences = [
@@ -149,7 +149,7 @@ for i in range(0,3):
     print('\n')
                 
 
-print('Which of the parameters have zero values under each model? Use log base 2 in your calculations. Map words not observed in the training corpus to the <unk> token.')
+print('Q5b\n   Which of the parameters have zero values under each model? Use log base 2 in your calculations. Map words not observed in the training corpus to the <unk> token.')
 
 
 
@@ -178,7 +178,7 @@ else:
 
 #Question 6
 
-print('\nCompute the perplexities of each of the sentences above under each of the models.')
+print('Q6\n   Compute the perplexities of each of the sentences above under each of the models.')
 
 print('Unigram Perplexity')
 unigram_perplexity = list()
@@ -206,7 +206,7 @@ for i in range(0,3):
 
 #Question 7
 
-print('\n Compute the perplelxities of the entire test corpora, sparately for the brown-test.text and learner-test.txt under each of the models. Discuss the differences in the results you obtained.')
+print('Q7\n   Compute the perplelxities of the entire test corpora, sparately for the brown-test.text and learner-test.txt under each of the models. Discuss the differences in the results you obtained.')
 
 brown_unigram_log_prob = Extrapolation.logProbabilities(brown_test_unknowned.token_parsed_doc, unigram_mle, 'unigram')
 brown_bigram_mle_log_prob = Extrapolation.logProbabilities(brown_test_unknowned.token_parsed_doc, bigram_mle, 'bigram')
@@ -226,12 +226,12 @@ learner_1_perplexity = 2**(sum(learner_unigram_log_prob)/brown_test_unknowned.to
 learner_2mle_perplexity = 2**(sum(learner_bigram_mle_log_prob)/brown_test_unknowned.total_token_count)
 learner_2smooth_perplexity = 2**(sum(learner_bigram_smooth_log_prob)/brown_test_unknowned.total_token_count)
 
-print('brown-test.txt perplexities\n_______________')
+print('\nBrown Test Perplexities\n_______________')
 print('Unigram: ' + str(brown_1_perplexity))
 print('Bigram MLE: ' + str(brown_2mle_perplexity))
 print('Bigram Smooth: ' + str(brown_2smooth_perplexity))
 
-print('\nlearner-test.txt perplexities\n_______________')
+print('\nLearner Test Perplexities\n_______________')
 print('Unigram: ' + str(learner_1_perplexity))
 print('Bigram MLE: ' + str(learner_2mle_perplexity))
 print('Bigram Smooth: ' + str(learner_2smooth_perplexity))

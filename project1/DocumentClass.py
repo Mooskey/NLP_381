@@ -2,40 +2,40 @@ import re
 
 class Document:
 
-    def __init__(self, text = '', pad = True, lower = True):
+    def __init__(self, text = '', dirty = True):
         self.doc_text = text
         self.total_token_count = 0
         self.token_counts = {}
 
-        self.cleanDoc(pad, lower)
+        if dirty == True:
+            self.cleanDoc()
+
         self.token_parsed_doc = self.doc_text.split(' ')
 
         self.countTokens()
 
 
-    def cleanDoc(self, pad, lower):
-        if(pad == False and lower == False):
-            pass
-        else: 
-        #parse sentence with endings . , ? ? , and ! !
-            regex_parse = '( \.\n)|( ! !\n)|( \? \?\n)'
-            sentence_parsed_doc = re.split(regex_parse, self.doc_text)
-            
-        #remove line breaks
-            sentence_parsed_doc = [y.replace('\n', ' ') for y in sentence_parsed_doc if y != None]
-            
-        #remove trailing garbage
-            del(sentence_parsed_doc[-1])
-            sentence_parsed_doc[-1] = sentence_parsed_doc[-1][:-1]
+    def cleanDoc(self):
+    
+    #parse sentence with endings . , ? ? , and ! !
+        regex_parse = '( \.\n)|( ! !\n)|( \? \?\n)'
+        sentence_parsed_doc = re.split(regex_parse, self.doc_text.lower())
+        
+    #remove line breaks
+        sentence_parsed_doc = [y.replace('\n', ' ') for y in sentence_parsed_doc if y != None]
+        
+    #remove trailing garbage
+        del(sentence_parsed_doc[-1])
+        sentence_parsed_doc[-1] = sentence_parsed_doc[-1][:-1]
 
-        #attach padding to each of the sentences
-            for i in range(0,len(sentence_parsed_doc),2):
-                sentence_parsed_doc[i] = '<s> ' + sentence_parsed_doc[i] + ' </s>'
-        #piece corpus back together
-            
-            self.doc_text = ''
-            for sentence in sentence_parsed_doc:
-                self.doc_text += sentence
+    #attach padding to each of the sentences
+        for i in range(0,len(sentence_parsed_doc),2):
+            sentence_parsed_doc[i] = '<s> ' + sentence_parsed_doc[i] + ' </s>'
+    
+    #piece corpus back together
+        self.doc_text = ''
+        for sentence in sentence_parsed_doc:
+            self.doc_text += sentence
 
     
     def countTokens(self):
@@ -54,7 +54,7 @@ class Document:
             if self.token_counts[token] == 1:
                 token = '<unk>'
             unknowned_text += ' ' + token + ' '
-        return Document(unknowned_text, False, False)
+        return Document(unknowned_text, False)
 
     def testUnknownify(self, doc):
         unknowned_text = str(self.doc_text)
@@ -65,7 +65,7 @@ class Document:
             unknowned_text = unknowned_text.replace(' ' + token + ' ', ' <unk> ')
         #in case the same word appears twice. I should do this with a regex but I need to brush up on those.
             unknowned_text = unknowned_text.replace(' ' + token + ' ', ' <unk> ')
-        return Document(unknowned_text,False,False)
+        return Document(unknowned_text, False)
 
     def generateUnigramMLE(self):
     #create new dictionary of all words in training corpus and their counts
