@@ -186,7 +186,7 @@ unigram_perplexity = list()
 for i in range(0,3):
     l = sum(unigram_log_prob[i])/length_sentence[i]
     unigram_perplexity.append(2**l)
-    print('Sentence ' + str(i+1) + ' Perplexity: ' + str(perplexity[i]))
+    print('Sentence ' + str(i+1) + ' Perplexity: ' + str(unigram_perplexity[i]))
 
 print('Bigram MLE Perplexity')
 bigram_mle_perplexity = list()
