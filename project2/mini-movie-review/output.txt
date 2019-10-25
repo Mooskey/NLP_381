@@ -1,0 +1,3 @@
+Prediction: action
+Log Probability of comedy-13.736965594166206
+Log Probability of action:-12.509775004326936
