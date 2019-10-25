@@ -11,7 +11,7 @@ if 'mini' not in data_path:
     param_file = open(data_path + '/movie-review.NB', 'w')
 
     vocab_text = ''
-    regex = '(?!-|\')\W|\'{2,}|-{2,}|br \/'
+    regex = ' -|- |(?!-|\')\W|\'{2,}|-{2,}|br \/'
     for path in train_test:
         meta_pos = ''
         meta_neg = ''
@@ -48,8 +48,6 @@ if 'mini' not in data_path:
         meta_neg = meta_neg[:-1]
 
 
-        #print([x for x in set(meta_pos.split(' ')) if '\'' in x and ('\'s' not in x and 's\'' not in x)])
-        
         if 'train' in path:
             print('Vocab Creation\n-----------------')
 

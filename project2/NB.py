@@ -1,12 +1,14 @@
 import sys, os, math, glob
 
 data_path = sys.argv[1]
+sys.argv.append('')
+version = sys.argv[2]
 
+model = glob.glob(data_path + '/movie-review'+ version + '.NB')[0]
 
-model = glob.glob(data_path + '/*.NB')[0]
-test_data = glob.glob(data_path + '/test/*.NB')[0]
+test_data = glob.glob(data_path + '/test/test-movie-review'+ version + '.NB')[0]
 
-output = open(data_path + '/output.txt', 'w')
+output = open(data_path + '/output' + version + '.txt', 'w')
 output_text = 'Class Prediction\n----- ----------\n'
 
 model = open(model,'r').read()
