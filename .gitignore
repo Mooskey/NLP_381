@@ -1,2 +1,6 @@
 project1/.vscode/
 project1/__pycache__/
+project2/movie-review-HW2/test/
+project2/movie-review-HW2/train/
+project2/movie-review-HW2/imdb.vocab
+
