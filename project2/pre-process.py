@@ -28,7 +28,7 @@ if 'mini' not in data_path:
                 review = review.lower()
                 review = re.sub(regex, ' ',review)
     
-            meta_pos += review + splitter
+                meta_pos += review + splitter
 
             meta_pos = re.sub(' {2,}', ' ',meta_pos)
             meta_pos = re.sub(' \n', '\n',meta_pos)

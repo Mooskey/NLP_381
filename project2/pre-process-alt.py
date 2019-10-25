@@ -32,7 +32,7 @@ for path in train_test:
             review = re.sub(regex, ' ',review)
             for x,y in mapping.items():
                 review = review.replace(x, y)        
-        meta_pos += review + splitter
+            meta_pos += review + splitter
 
         meta_pos = re.sub(' {2,}', ' ',meta_pos)
         meta_pos = re.sub(' \n', '\n',meta_pos)
