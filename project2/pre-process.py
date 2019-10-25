@@ -12,7 +12,7 @@ if 'mini' not in data_path:
 
     vocab_text = ''
     regex = ' -|- |(?!-|\')\W|\'{2,}|-{2,}|br \/'
-    
+
     for path in train_test:
         meta_pos = ''
         meta_neg = ''
@@ -100,7 +100,7 @@ if 'mini' not in data_path:
   
                 test_param_text += 'neg '
                 neg_counts = dict(param_start)
-                x = neg_reviews[i].split(' ')
+                x = review.split(' ')
                 for word in x:                    
                     if word in vocab:
                         neg_counts[word] += 1

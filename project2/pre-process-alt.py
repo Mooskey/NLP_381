@@ -108,7 +108,7 @@ for path in train_test:
 
             test_param_text += 'neg '
             neg_counts = dict(param_start)
-            x = neg_reviews[i].split(' ')
+            x = review.split(' ')
             for word in x:                    
                 if word in vocab:
                     neg_counts[word] += 1
