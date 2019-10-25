@@ -10,7 +10,7 @@ test_param_file = open(data_path + '/test/test-movie-review-alt.NB', 'w')
 param_file = open(data_path + '/movie-review-alt.NB', 'w')
 
 vocab_text = ''
-#only keep apostrophes surrounded by words, do not keep dashes
+#only keep apostrophes surrounded by words
 regex = ' -|- | \'|\' |(?!-|\')\W|\'{2,}|-{2,}|br \/'
 
 #mapped apostrophe contractions to expansions
@@ -22,37 +22,102 @@ for path in train_test:
     if 'train' in path:
         splitter = ' '
         print('Processing Train\n-----------------')
-    else:
-        splitter = '\n'
-        print('Processing Test\n-----------------')
-    
-    print('MetaDoc creation for Pos\n-----------------')
 
-    for text in os.listdir(path + '/pos'):
-        review = open(path + '/pos/' + text, 'r').read()
-        review = review.lower()
-        review = re.sub(regex, ' ',review)
-        for x,y in mapping.items():
-            review = review.replace(x, y)        
+        for text in os.listdir(path + '/pos'):
+            review = open(path + '/pos/' + text, 'r')
+            temp = review.read()
+            review.close()
+            review = temp
+            review = review.lower()
+            review = re.sub(regex, ' ',review)
+            for x,y in mapping.items():
+                review = review.replace(x, y)        
         meta_pos += review + splitter
 
-    meta_pos = re.sub(' {2,}', ' ',meta_pos)
-    meta_pos = re.sub(' \n', '\n',meta_pos)
-    meta_pos = meta_pos[:-1]
+        meta_pos = re.sub(' {2,}', ' ',meta_pos)
+        meta_pos = re.sub(' \n', '\n',meta_pos)
+        meta_pos = meta_pos[:-1]
 
-    print('MetaDoc creation for Neg\n-----------------')
+        print('MetaDoc creation for Neg\n-----------------')
     
-    for text in os.listdir(path + '/neg'):
+        for text in os.listdir(path + '/neg'):
 
-        review = open(path + '/neg/' + text, 'r').read()
-        review = review.lower()
-        review = re.sub(regex, ' ',review)
-        for x,y in mapping.items():
-            review = review.replace(x, y)     
-        meta_neg += review + splitter
-    meta_neg = re.sub(' {2,}', ' ',meta_neg)
-    meta_neg = re.sub(' \n', '\n',meta_neg)
-    meta_neg = meta_neg[:-1]
+            review = open(path + '/neg/' + text, 'r')
+            temp = review.read()
+            review.close()
+            review = temp
+            review = review.lower()
+            review = re.sub(regex, ' ',review)
+            for x,y in mapping.items():
+                review = review.replace(x, y)     
+            meta_neg += review + splitter
+        meta_neg = re.sub(' {2,}', ' ',meta_neg)
+        meta_neg = re.sub(' \n', '\n',meta_neg)
+        meta_neg = meta_neg[:-1]
+
+    else:
+        print('Processing Test\n-----------------')
+    
+        print('Parameter creation for Pos\n-----------------')
+        test_param_text = ''
+        param_start = {word:0 for word in vocab_text}
+        counter = 0
+        percent_counter = 0
+
+        for text in os.listdir(path + '/pos'):
+            review = open(path + '/pos/' + text, 'r')
+            temp = review.read()
+            review.close()
+            review = temp
+            review = review.lower()
+            review = re.sub(regex, ' ',review)
+            for x,y in mapping.items():
+                review = review.replace(x, y)        
+            ##
+
+            counter += 1
+            test_param_text += 'pos '
+            pos_counts = dict(param_start)
+            x = review.split(' ')
+            for word in x:
+                if word in vocab:
+                    pos_counts[word] += 1
+            for word in vocab_text:
+                test_param_text += str(pos_counts[word]) + ' '
+            test_param_text = test_param_text[:-1] + '\n'
+            if percent_counter != (counter/12500*100)//1:
+                percent_counter = counter/12500*100//1
+                sys.stdout.flush()
+                sys.stdout.write(str(percent_counter))
+#
+
+
+            ##
+        print('Parameter creation for Neg\n-----------------')
+        
+        for text in os.listdir(path + '/neg'):
+
+            review = open(path + '/neg/' + text, 'r')
+            temp = review.read()
+            review.close()
+            review = temp
+            review = review.lower()
+            review = re.sub(regex, ' ',review)
+            for x,y in mapping.items():
+                review = review.replace(x, y)     
+
+            test_param_text += 'neg '
+            neg_counts = dict(param_start)
+            x = neg_reviews[i].split(' ')
+            for word in x:                    
+                if word in vocab:
+                    neg_counts[word] += 1
+
+            for word in vocab_text:
+                test_param_text += str(neg_counts[word]) + ' '
+            test_param_text = test_param_text[:-1] + '\n'
+
+        test_param_file.write(test_param_text[:-1])
 
 
    
@@ -87,45 +152,3 @@ for path in train_test:
         pos_params = pos_params[:-1]
         neg_params = neg_params[:-1]
         param_file.write(pos_params + '\n' + neg_params)
-    else:
-        print('Parameter creation\n-----------------')
-
-        test_param_text = ''
-        pos_reviews = meta_pos.split('\n')
-        neg_reviews = meta_neg.split('\n')
-        param_start = {word:0 for word in vocab_text}
-        print('Param creation for Pos\n-----------------')
-        counter = 0
-        percent_counter = 0
-        for i in range(len(pos_reviews)):
-            counter += 1
-            test_param_text += 'pos '
-            pos_counts = dict(param_start)
-            x = pos_reviews[i].split(' ')
-            for word in x:
-                if word in vocab_text:
-                    pos_counts[word] += 1
-
-            for word in vocab_text:
-                test_param_text += str(pos_counts[word]) + ' '
-            test_param_text = test_param_text[:-1] + '\n'
-            if percent_counter != (counter/12500*100)//1:
-                percent_counter = counter/12500*100//1
-                sys.stdout.flush()
-                sys.stdout.write(str(percent_counter))
-
-
-        print('\nParam creation for Neg\n-----------------')                            
-        for i in range(len(neg_reviews)):
-            test_param_text += 'neg '
-            neg_counts = dict(param_start)
-            x = neg_reviews[i].split(' ')
-            for word in x:                    
-                if word in vocab_text:
-                    neg_counts[word] += 1
-
-            for word in vocab_text:
-                test_param_text += str(neg_counts[word]) + ' '
-            test_param_text = test_param_text[:-1] + '\n'
-
-        test_param_file.write(test_param_text[:-1])
